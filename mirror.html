@@ -5,47 +5,19 @@
     <link rel="manifest" href="https://trmnl.com/mirror/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <link
-      rel="apple-touch-icon"
-      type="image/png"
-      href="https://trmnl.com/mirror/favicons/apple-touch-icon-76x76.png"
-      sizes="76x76"
-    />
-    <link
-      rel="apple-touch-icon"
-      type="image/png"
-      href="https://trmnl.com/mirror/favicons/apple-touch-icon-120x120.png"
-      sizes="120x120"
-    />
-    <link
-      rel="apple-touch-icon"
-      type="image/png"
-      href="https://trmnl.com/mirror/favicons/apple-touch-icon-152x152.png"
-      sizes="152x152"
-    />
-    <link
-      rel="apple-touch-icon"
-      type="image/png"
-      href="https://trmnl.com/mirror/favicons/apple-touch-icon-167x167.png"
-      sizes="167x167"
-    />
-    <link
-      rel="apple-touch-icon"
-      type="image/png"
-      href="https://trmnl.com/mirror/favicons/apple-touch-icon-180x180.png"
-      sizes="180x180"
-    />
-
+    <link rel="apple-touch-icon" type="image/png" href="https://trmnl.com/mirror/favicons/apple-touch-icon-76x76.png" sizes="76x76" />
+    <link rel="apple-touch-icon" type="image/png" href="https://trmnl.com/mirror/favicons/apple-touch-icon-120x120.png" sizes="120x120" />
+    <link rel="apple-touch-icon" type="image/png" href="https://trmnl.com/mirror/favicons/apple-touch-icon-152x152.png" sizes="152x152" />
+    <link rel="apple-touch-icon" type="image/png" href="https://trmnl.com/mirror/favicons/apple-touch-icon-167x167.png" sizes="167x167" />
+    <link rel="apple-touch-icon" type="image/png" href="https://trmnl.com/mirror/favicons/apple-touch-icon-180x180.png" sizes="180x180" />
     <link rel="icon" type="image/png" href="https://trmnl.com/mirror/favicons/favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://trmnl.com/mirror/favicons/favicon-32x32.png" sizes="32x32" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="TRMNL" />
     <meta name="twitter:image" content="/mirror/og.jpg" />
     <meta property="og:description" content="Turn any tablet into a TRMNL in 1 click." />
     <meta name="og:image" content="/mirror/og.jpg" />
-
     <script>
       const trmnl = {
         refreshTimer: null,
@@ -53,171 +25,192 @@
 
         getIOSMajorVersion() {
           if (!/iP(hone|od|ad)/.test(navigator.platform)) {
-            return null
+            return null;
           }
-
-          const ua = navigator.userAgent
-          const match = ua.match(/OS (\d+)[._](\d+)(?:[._](\d+))?/)
-          if (!match) return null
-          const major = parseInt(match[1], 10)
-          return major
+          const ua = navigator.userAgent;
+          const match = ua.match(/OS (\d+)[._](\d+)(?:[._](\d+))?/);
+          if (!match) return null;
+          return parseInt(match[1], 10);
         },
 
         checkIOSVersion() {
-          const major = trmnl.getIOSMajorVersion()
-
+          const major = trmnl.getIOSMajorVersion();
           if (major && major < 10) {
-            trmnl.ui.unsupportedWarning.style.display = "block"
+            trmnl.ui.unsupportedWarning.style.display = "block";
           }
         },
 
         showStatus(message) {
-          trmnl.ui.img.style.display = "none"
-          trmnl.ui.errorContainer.style.display = "flex"
-          trmnl.ui.errorMessage.textContent = message
+          trmnl.ui.img.style.display = "none";
+          trmnl.ui.errorContainer.style.display = "flex";
+          trmnl.ui.errorMessage.textContent = message;
         },
 
         showScreen(src) {
-          trmnl.ui.img.src = src
-          trmnl.ui.img.style.display = "block"
-          trmnl.ui.errorContainer.style.display = "none"
+          trmnl.ui.img.src = src;
+          trmnl.ui.img.style.display = "block";
+          trmnl.ui.errorContainer.style.display = "none";
         },
 
         showSetupForm() {
-          const data = trmnl.getSettings()
-          trmnl.ui.apiKeyInput.value = data.api_key || ""
-          trmnl.ui.baseURLInput.value = data.base_url || ""
-          trmnl.ui.displayModeSelect.value = data.display_mode || ""
-          trmnl.ui.baseURLDetails.open = !!data.base_url
-
-          trmnl.ui.setup.style.display = "flex"
+          const data = trmnl.getSettings();
+          trmnl.ui.apiKeyInput.value = data.api_key || "";
+          trmnl.ui.baseURLInput.value = data.base_url || "";
+          trmnl.ui.displayModeSelect.value = data.display_mode || "";
+          trmnl.ui.baseURLDetails.open = !!data.base_url;
+          trmnl.ui.setup.style.display = "flex";
         },
 
         saveSetup(event) {
-          event.preventDefault()
+          event.preventDefault();
 
-          const apiKey = trmnl.ui.apiKeyInput.value
-          const baseURL = trmnl.ui.baseURLInput.value
-          const displayMode = trmnl.ui.displayModeSelect.value
+          const apiKey = trmnl.ui.apiKeyInput.value;
+          const baseURL = trmnl.ui.baseURLInput.value;
+          const displayMode = trmnl.ui.displayModeSelect.value;
 
-          if (!apiKey) {
-            return
-          }
+          if (!apiKey) return;
 
           trmnl.saveSettings({
             api_key: apiKey,
             base_url: baseURL,
-            display_mode: displayMode
-          })
+            display_mode: displayMode,
+          });
 
-          trmnl.fetchDisplay()
+          trmnl.fetchDisplay();
         },
 
         hideSetupForm() {
-          trmnl.ui.setup.style.display = "none"
+          trmnl.ui.setup.style.display = "none";
         },
 
         async fetchDisplay(opts = {}) {
-          clearTimeout(trmnl.refreshTimer)
+          clearTimeout(trmnl.refreshTimer);
 
           if (!opts.quiet) {
-            trmnl.hideSetupForm()
-            trmnl.showStatus("Loading...")
+            trmnl.hideSetupForm();
+            trmnl.showStatus("Loading...");
           }
 
-          const setup = trmnl.getSettings()
-          const apiKey = setup.api_key
-          const displayMode = setup.display_mode
-          const baseURL = setup.base_url || "https://trmnl.com"
+          const setup = trmnl.getSettings();
+          const apiKey = setup.api_key;
+          const displayMode = setup.display_mode;
+          const baseURL = setup.base_url || "https://trmnl.com";
 
-          document.body.classList.remove("dark", "night")
+          document.body.classList.remove("dark", "night");
           if (displayMode) {
-            document.body.classList.add(displayMode)
+            document.body.classList.add(displayMode);
           }
 
-          let headers = { "Access-Token": apiKey }
+          let headers = { "Access-Token": apiKey };
 
           try {
             const response = await fetch(`${baseURL}/api/display/current`, {
               method: "GET",
-              headers
-            })
+              headers,
+            });
 
             if (!response.ok) {
-              trmnl.showStatus(`Failed to fetch screen: ${response.status} ${response.statusText}`)
-              return
+              trmnl.showStatus(`Failed to fetch screen: ${response.status} ${response.statusText}`);
+              return;
             }
 
-            const data = await response.json()
-            console.log("Display response:", data)
+            const data = await response.json();
+            console.log("Display response:", data);
 
             if (data.status !== 200) {
-              trmnl.showStatus(`Error: ${data.error || data.message || data.status}`)
-              return
+              trmnl.showStatus(`Error: ${data.error || data.message || data.status}`);
+              return;
             }
 
-            trmnl.showScreen(data.image_url)
+            trmnl.showScreen(data.image_url);
 
             if (data.refresh_rate) {
-              let refreshRate = 30
+              let refreshRate = 30;
 
               if (data.rendered_at) {
-                const renderedAt = new Date(data.rendered_at)
-                const now = new Date()
-                const elapsedSeconds = Math.floor((now - renderedAt) / 1000)
+                const renderedAt = new Date(data.rendered_at);
+                const now = new Date();
+                const elapsedSeconds = Math.floor((now - renderedAt) / 1000);
 
                 if (elapsedSeconds < data.refresh_rate) {
-                  refreshRate = data.refresh_rate - elapsedSeconds + 5 // add 5 seconds to ensure the device triggers api/display first
+                  refreshRate = data.refresh_rate - elapsedSeconds + 5; // add 5 seconds to ensure the device triggers api/display first
                 }
               }
 
-              console.log(`Refreshing in ${refreshRate} seconds...`)
-              trmnl.refreshTimer = setTimeout(() => trmnl.fetchDisplay({ quiet: true }), 1000 * refreshRate)
+              console.log(`Refreshing in ${refreshRate} seconds...`);
+              trmnl.refreshTimer = setTimeout(() => trmnl.fetchDisplay({ quiet: true }), 1000 * refreshRate);
             }
           } catch (error) {
-            trmnl.showStatus("Network error: " + error.message)
+            trmnl.showStatus("Network error: " + error.message);
           }
         },
 
         getSettings() {
-          return JSON.parse(localStorage.getItem("settings")) || {}
+          return JSON.parse(localStorage.getItem("settings")) || {};
         },
 
         saveSettings(data) {
-          const settings = trmnl.getSettings()
-          Object.assign(settings, data)
-          localStorage.setItem("settings", JSON.stringify(settings))
-          console.log("Settings saved:", settings)
+          const settings = trmnl.getSettings();
+          Object.assign(settings, data);
+          localStorage.setItem("settings", JSON.stringify(settings));
+          console.log("Settings saved:", settings);
+        },
+
+        // Apply api_key, base_url and display_mode from URL params and persist to localStorage.
+        // Valid display_mode values: "" (light), "dark", "night"
+        applyURLParams() {
+          const params = new URLSearchParams(window.location.search);
+          const validDisplayModes = ["", "dark", "night"];
+          const update = {};
+
+          const urlApiKey = params.get("api_key");
+          if (urlApiKey) update.api_key = urlApiKey;
+
+          const urlBaseURL = params.get("base_url");
+          if (urlBaseURL) update.base_url = urlBaseURL;
+
+          const urlDisplayMode = params.get("display_mode");
+          if (urlDisplayMode !== null && validDisplayModes.includes(urlDisplayMode)) {
+            update.display_mode = urlDisplayMode;
+          }
+
+          if (Object.keys(update).length > 0) {
+            trmnl.saveSettings(update);
+            console.log("Settings applied from URL params:", update);
+          }
         },
 
         init() {
           // screen
-          trmnl.ui.img = document.getElementById("screen")
-          trmnl.ui.errorContainer = document.getElementById("error-container")
-          trmnl.ui.errorMessage = document.getElementById("error-message")
+          trmnl.ui.img = document.getElementById("screen");
+          trmnl.ui.errorContainer = document.getElementById("error-container");
+          trmnl.ui.errorMessage = document.getElementById("error-message");
 
           // settings
-          trmnl.ui.apiKeyInput = document.getElementById("api_key")
-          trmnl.ui.baseURLInput = document.getElementById("base_url")
-          trmnl.ui.displayModeSelect = document.getElementById("display_mode")
-          trmnl.ui.setup = document.getElementById("setup")
-          trmnl.ui.baseURLDetails = document.getElementById("custom_server_details")
-          trmnl.ui.unsupportedWarning = document.getElementById("unsupported")
+          trmnl.ui.apiKeyInput = document.getElementById("api_key");
+          trmnl.ui.baseURLInput = document.getElementById("base_url");
+          trmnl.ui.displayModeSelect = document.getElementById("display_mode");
+          trmnl.ui.setup = document.getElementById("setup");
+          trmnl.ui.baseURLDetails = document.getElementById("custom_server_details");
+          trmnl.ui.unsupportedWarning = document.getElementById("unsupported");
 
-          trmnl.checkIOSVersion()
+          trmnl.checkIOSVersion();
 
-          const settings = trmnl.getSettings()
+          // Apply URL params before reading settings
+          trmnl.applyURLParams();
+
+          const settings = trmnl.getSettings();
           if (!settings || !settings.api_key) {
-            trmnl.showSetupForm()
+            trmnl.showSetupForm();
           } else {
-            trmnl.fetchDisplay()
+            trmnl.fetchDisplay();
           }
-        }
-      }
+        },
+      };
 
       document.addEventListener("DOMContentLoaded", () => {
-        trmnl.init()
-      })
+        trmnl.init();
+      });
     </script>
     <style>
       body {
@@ -389,11 +382,7 @@
           <fieldset>
             <label for="api_key">Device API Key</label>
             <input name="api_key" id="api_key" type="text" placeholder="API Key" class="form-control" required />
-            <a
-              href="https://trmnl.com/devices/current/edit"
-              target="_blank"
-              style="margin-top: 0.5em; display: block"
-            >
+            <a href="https://trmnl.com/devices/current/edit" target="_blank" style="margin-top: 0.5em; display: block">
               Get the API key
             </a>
           </fieldset>
@@ -422,6 +411,7 @@
 
           <button class="btn">Save</button>
         </form>
+
         <div id="unsupported" style="display: none">iOS 10+ is required. Mirroring may not function as expected.</div>
       </div>
     </div>
